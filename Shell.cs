@@ -8,7 +8,9 @@ namespace CLISharp{
         private bool toExit = false;
         public string PromptPrefix{get;set;} = "> ";
         public string WelcomeMessage{get;set;} = "Welcome. Please enter a command. Use \"exit\" or \"quit\" to close the program";
-        public bool ShowMessage{get;set;} = true;
+        public string ExitMessage{get;set;} = "Goodbye";
+        public bool ShowWelcomeMessage{get;set;} = true;
+        public bool ShowExitMessage{get;set;} = true;
         private Dictionary<string,funcdel> Functions = new Dictionary<string,funcdel>
         {
             {"test",Test},
@@ -18,7 +20,7 @@ namespace CLISharp{
         public void Run()
         {
             string input = null;
-            if(ShowMessage)
+            if(ShowWelcomeMessage)
             {
                 Console.WriteLine(WelcomeMessage);
             }
@@ -41,7 +43,10 @@ namespace CLISharp{
         }
         private static void Exit(Shell s, params string[] args)
         {
-            Console.WriteLine("Goodbye.");
+            if(s.ShowExitMessage)
+            {
+                Console.WriteLine(s.ExitMessage);
+            }
             s.toExit = true;
         }
         public void Execute(string input)
