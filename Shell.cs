@@ -4,18 +4,18 @@ using System.Collections.Generic;
 namespace CLISharp{
     public class Shell
     {
-        protected delegate void funcdel(Shell s, params string[] args);
+        //protected delegate void funcdel(Shell s, params string[] args);
         private bool toExit = false;
         public string PromptPrefix{get;set;} = "> ";
         public string WelcomeMessage{get;set;} = "Welcome. Please enter a command. Use \"exit\" or \"quit\" to close the program";
         public string ExitMessage{get;set;} = "Goodbye";
         public bool ShowWelcomeMessage{get;set;} = true;
         public bool ShowExitMessage{get;set;} = true;
-        private Dictionary<string,funcdel> Functions = new Dictionary<string,funcdel>
+        private Dictionary<string,ShellFunction> Functions = new Dictionary<string,ShellFunction>
         {
-            {"test",Test},
-            {"exit",Exit},
-            {"quit",Exit}
+            {"test",new ShellFunction(Test)},
+            {"exit",new ShellFunction(Exit)},
+            {"quit",new ShellFunction(Exit)}
         };
         public void Run()
         {
@@ -55,14 +55,14 @@ namespace CLISharp{
             input = input.ToLower();
             if (Functions.ContainsKey(ss[0]))
             {
-                Functions[ss[0]](this,ss);
+                Functions[ss[0]].Execute(this,ss);
             }
             else
             {
                 Console.WriteLine($"Function '{input}' not recognized. Sorry!");
             }
         }
-        protected void RegisterFunctions(Dictionary<string,funcdel> func)
+        protected void RegisterFunctions(Dictionary<string,ShellFunction> func)
         {
             foreach (var function in func)
             {
