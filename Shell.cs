@@ -78,7 +78,13 @@ namespace CLISharp
 			{
 				Console.WriteLine(ExitMessage);
 			}
+			OnExit();
 			toExit = true;
+		}
+
+		protected virtual void OnExit()
+		{
+
 		}
 
 		public void Execute(string input)
