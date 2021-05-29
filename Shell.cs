@@ -1,59 +1,48 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace CLISharp
 {
 	public class Shell
 	{
-		//protected delegate void funcdel(Shell s, params string[] args);
 		private bool toExit = false;
 		public string PromptPrefix { get; set; } = "> ";
 		public string WelcomeMessage { get; set; } = "Welcome. Please enter a command. Use \"exit\" or \"quit\" to close the program";
 		public string ExitMessage { get; set; } = "Goodbye";
 		public bool ShowWelcomeMessage { get; set; } = true;
 		public bool ShowExitMessage { get; set; } = true;
-		private Dictionary<string, ShellFunction> Functions;
+		private List<ShellFunction> _functions = new List<ShellFunction>();
 
 		public Shell()
 		{
-			Functions = new Dictionary<string, ShellFunction>()
-			{
-				{"help",new ShellFunction(GetHelp)},
-				{"?", new ShellFunction(GetHelp)},
-				{"exit",new ShellFunction(Exit)},
-				{"quit",new ShellFunction(Exit)}
-			};
+			AddFunction("help", GetHelp)
+				.AddAlias("?")
+				.SetHelp("Shows the Help Dialog");
+
+			AddFunction("exit", Exit)
+				.AddAlias("quit")
+				.SetHelp("Exits the application");
 		}
 
-		public ShellFunction AddFunction(string name) => AddFunction(name, new ShellFunction());
+		public ShellFunction AddFunction(string name) => AddFunction(new ShellFunction(name));
 
-		public ShellFunction AddFunction(string name, ShellFunction function)
+		public ShellFunction AddFunction(string name, Action<string[]> action) => AddFunction(new ShellFunction(name, action));
+
+		public ShellFunction AddFunction(ShellFunction function)
 		{
 			ShellFunction ret = null;
-			if (!Functions.ContainsKey(name))
+			if (!_functions.Where(f => f.Name == function.Name || f.Aliases.Contains(function.Name)).Any())
 			{
-				Functions.Add(name, function);
+				_functions.Add(function);
 				ret = function;
 			}
 			return ret;
 		}
 
-		public ShellFunction AddAlias(string currentname, string alias)
-		{
-			ShellFunction res = null;
-
-			if (Functions.ContainsKey(currentname))
-			{
-				res = Functions[currentname];
-				Functions.Add(alias, Functions[currentname]);
-			}
-
-			return res;
-		}
-
 		public ShellFunction GetFunction(string name)
 		{
-			return Functions[name];
+			return _functions.Where(f => f.Name == name || f.Aliases.Contains(name)).FirstOrDefault();
 		}
 
 		public void Run()
@@ -89,23 +78,16 @@ namespace CLISharp
 
 		public void Execute(string input)
 		{
-			string[] ss = input.Split(' ');
 			input = input.ToLower();
-			if (Functions.ContainsKey(ss[0]))
+			string[] ss = input.Split(' ');
+			var function = GetFunction(ss[0]);
+			if (function != null)
 			{
-				Functions[ss[0]].Function(ss);
+				function.Function(ss);
 			}
 			else
 			{
 				Console.WriteLine($"Function '{input}' not recognized. Sorry!");
-			}
-		}
-
-		protected void RegisterFunctions(Dictionary<string, ShellFunction> func)
-		{
-			foreach (var function in func)
-			{
-				Functions.Add(function.Key.ToLower(), function.Value);
 			}
 		}
 
@@ -124,26 +106,41 @@ namespace CLISharp
 		private void DisplayHelp(string funcKey)
 		{
 			string res = String.Empty;
-			if (Functions.ContainsKey(funcKey))
+			var func = GetFunction(funcKey);
+			if (func != null)
 			{
-				string text = Functions[funcKey].HelpText;
+				var text = func.HelpText;
 				if (text != String.Empty && text != null)
 				{
-					res = $"{funcKey}: {text}";
+					var aliases = String.Empty;
+					if (func.Aliases.Count > 0)
+					{
+						aliases = " [";
+						for (var i = 0; i < func.Aliases.Count; i++)
+						{
+							aliases += func.Aliases[i];
+							if (i < func.Aliases.Count - 1)
+							{
+								aliases += ", ";
+							}
+						}
+						aliases += "]";
+					}
+					res = $"{func.Name}{aliases}: {text}";
 				}
 			}
 			else
 			{
-				res = $"Function '{funcKey}' not found.";
+				res = $"Function \"{funcKey}\" not found.";
 			}
 			if (res != String.Empty) Console.WriteLine(res);
 		}
 
 		private void DisplayHelp()
 		{
-			foreach (var func in Functions)
+			foreach (var func in _functions)
 			{
-				DisplayHelp(func.Key);
+				DisplayHelp(func.Name);
 			}
 		}
 	}
