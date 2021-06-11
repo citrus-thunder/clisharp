@@ -2,6 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+		<PackageId>MRWilliams.CLISharp</PackageId>
+		<Version>1.0.4</Version>
+		<Authors>M. R. Williams</Authors>
+		<Title>CLISharp</Title>
+		<PackageDescription>A Super Simple .NET CLI Library</PackageDescription>
+		<PackageTags>cli;console;interface</PackageTags>
+		<RepositoryUrl>https://github.com/citrus-thunder/clisharp</RepositoryUrl>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="readme.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>

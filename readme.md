@@ -1,11 +1,17 @@
 # CLISharp
-## A Simple C# CLI Library
-CLISharp provides a simple toolset for creating REPL shell applications, useful for simple programs and testing libraries.
+## A Super Simple .NET CLI Library
+CLISharp provides a simple toolset for creating REPL shell applications, useful for simple console programs and testing libraries.
 
 ----
 
+## Installation
+CLISharp is available on NuGet as [MRWilliams.CLISharp](https://www.nuget.org/packages/MRWilliams.CLISharp). The easiest way to include CLISharp in your project is to add it as a package reference with the `dotnet add package` command.
+```bash
+dotnet add package MRWilliams.CLISharp
+```
+
 ## Creating and Running a Shell
-To create a shell, simply create a new `Shell` object. Running the shell is as simple as calling `Run()` on the shell object.
+To create a Shell, simply create a new `Shell` object. Running the Shell is as simple as calling `Run()` on the Shell object.
 ```csharp
 using CLISharp;
 
@@ -19,10 +25,10 @@ class Program
 }
 ```
 ## Built-In Shell Functions
-A shell has a handful of built-in functions as soon as it is instantiated.
+A Shell has a handful of built-in functions as soon as it is instantiated.
 
 * `help`, `?`: Shows help text for any functions the Shell has access to which have their help information defined.
-* `exit`, `quit`: Exits the shell, returning control to the calling method.
+* `exit`, `quit`: Exits the Shell, returning control to the calling method.
 
 ## Adding New Functions
 While the base `Shell` class has some basic functionality built in, it will be much more useful once given access to new commands.
@@ -32,7 +38,8 @@ Doing so looks like this:
 // Creates a new Shell object
 var s = new Shell();
 
-// Adds a "greet" command to the Shell, which will be run whenever the user types "greet" into the CLI
+// Adds a new ShellFunction named "greet" to the Shell, 
+// which will be run whenever the user types "greet" into the CLI
 s.AddFunction("greet")
 	.SetFunction((string[] args) => {Console.WriteLine("Hello!")})
 	.SetHelp("Greets the User");
@@ -40,7 +47,7 @@ s.AddFunction("greet")
 // Begins the Shell Read-Evaluate-Print loop process.
 s.Run();
 ```
-A Shell can run any method with an `Action<string[]>` compatible signature, so adding a function can also look something like this:
+A ShellFunction can invoke any method with an `Action<string[]>` compatible signature, so creating a ShellFunction can also look something like this:
 ```csharp
 // ...
 s.AddFunction("greet")
@@ -59,8 +66,8 @@ Several aspects of the Shell's behavior can be changed through properties and ev
 
 ### Shell Properties
 
-* `WelcomeMessage`: Sets the message that shows upon the shell's launch.
-* `ExitMessage`: Sets the message that shows when the shell is closed.
+* `WelcomeMessage`: Sets the message that shows upon the Shell's launch.
+* `ExitMessage`: Sets the message that shows when the Shell is closed.
 * `PromptPrefix`: Sets what characters prepend the user's commands on each line.
 
 ### Shell Events
@@ -81,6 +88,6 @@ Shells can further be customized by creating a new Shell class derived from `CLI
 ## Notes on Future Updates and Collaboration
 I created this simple tool as a way to test libraries and create very simple command-line utilities -- think contact books and specialized calculators. The tool already satisfies its scope, and is therefore considered complete.
 
-Some future work is planned on adding integrated support for handling arguments and options passed to shell functions, but other than that you can expect only occasional updates to this tool.
+Some future work is planned on adding integrated support for handling arguments and options passed to Shell functions, but other than that you can expect only occasional updates to this tool.
 
 Enhancements and fixes are welcome, but anybody who wishes to expand the scope of this application beyond its current capabilities are encouraged to fork the project and continue their extension as a separate repository.
