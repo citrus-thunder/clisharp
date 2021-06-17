@@ -42,7 +42,7 @@ namespace CLISharp
 		/// <param name="name">Name of the new ShellFunction</param>
 		public ShellFunction(string name)
 		{
-			Function = (string[] s) => { };
+			Function = (string[] s) => { }; // placeholder empty function
 			Name = name;
 		}
 

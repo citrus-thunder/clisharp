@@ -91,7 +91,7 @@ namespace CLISharp
 		/// <returns></returns>
 		public ShellFunction GetFunction(string name)
 		{
-			return _functions.Where(f => f.Name == name || f.Aliases.Contains(name)).FirstOrDefault();
+			return _functions.Where(f => f.Name.ToLower() == name.ToLower() || f.Aliases.Contains(name.ToLower())).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -142,7 +142,6 @@ namespace CLISharp
 		/// </remarks>
 		public void Execute(string input)
 		{
-			input = input.ToLower();
 			string[] ss = input.Split(' ');
 			var function = GetFunction(ss[0]);
 			if (function != null)
