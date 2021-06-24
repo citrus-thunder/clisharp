@@ -3,9 +3,22 @@ using System.Collections.Generic;
 
 namespace CLISharp
 {
+	/// <summary>
+	/// A ShellFunction represents an action
+	/// that can be invoked by a Shell
+	/// </summary>
 	public class ShellFunction
 	{
 		private string _name;
+
+		/// <summary>
+		/// The Name of this ShellFunction
+		/// </summary>
+		/// <value></value>
+		/// <remarks>
+		/// This is the value the user will type
+		/// into the Shell to invoke this ShellFunction
+		/// </remarks>
 		public string Name
 		{
 			get => _name;
@@ -18,8 +31,6 @@ namespace CLISharp
 		/// <summary>
 		/// Alternate names that can be used to call this ShellFunction
 		/// </summary>
-		/// <typeparam name="string"></typeparam>
-		/// <returns></returns>
 		public List<string> Aliases {get; set;} = new List<string>();
 
 		/// <summary>

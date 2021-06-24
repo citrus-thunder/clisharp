@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace CLISharp
 {
+	/// <summary>
+	/// REPL Shell Application
+	/// </summary>
 	public class Shell
 	{
 		/// <summary>
@@ -38,6 +41,14 @@ namespace CLISharp
 
 		private List<ShellFunction> _functions = new List<ShellFunction>();
 
+		/// <summary>
+		/// Creates a new Shell instance
+		/// </summary>
+		/// <remarks>
+		/// New Shells are created with 
+		/// pre-defined "help" and "exit" 
+		/// ShellFunctions 
+		/// </remarks>
 		public Shell()
 		{
 			AddFunction("help", GetHelp)
